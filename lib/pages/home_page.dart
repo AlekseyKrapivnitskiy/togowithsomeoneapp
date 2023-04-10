@@ -42,7 +42,7 @@ class _HomePageState extends State<HomePage> {
               // текущему ThemeData, который был указан в MaterialApp
               // После получения ThemeData мы можем использовать
               // различные его стили (например headline3, как здесь)
-              style: Theme.of(context).textTheme.headline3,
+              style: Theme.of(context).textTheme.displaySmall,
             )
         )
     );
