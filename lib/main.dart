@@ -24,6 +24,8 @@ class MyApp extends StatelessWidget {
       // заголовок приложения
       // обычно виден, когда мы сворачиваем приложение
       title: 'Json Placeholder App',
+      // убираем баннер
+      debugShowCheckedModeBanner: false,
       // настройка темы, мы ещё вернёмся к этому
       theme: ThemeData(
         primarySwatch: Colors.blue,
