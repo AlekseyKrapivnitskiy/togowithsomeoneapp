@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'pony_detail_page.dart';
+
 // класс пони, который будет хранить имя и описание, а также id
 class Pony {
   final int id;
@@ -83,7 +85,13 @@ class PonyListPage extends StatelessWidget {
                   splashColor: Colors.pink,
                   // нажатие на элемент списка
                   onTap: () {
-                    // добавим немного позже
+                    // Здесь мы используем сокращенную форму:
+                    // Navigator.of(context).push(route)
+                    // PonyDetailPage принимает pony id,
+                    // который мы и передали
+                    Navigator.push(context, MaterialPageRoute(
+                        builder: (context) => PonyDetailPage(pony.id)
+                    ));
                   },
                   // далее указываем в качестве
                   // элемента Container с вложенным Text
