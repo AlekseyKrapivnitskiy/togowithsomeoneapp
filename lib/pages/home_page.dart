@@ -1,99 +1,88 @@
 import 'package:flutter/material.dart';
+import '../models/bottom_navigation.dart';
+import "../models/tab.dart";
+import '../models/tab_navigator.dart';
 
-// StatefulWidget имеет состояние, с которым
-// позже мы будем работать через функцию
-// setState(VoidCallback fn);
-// обратите внимание setState принимает другую функцию
+// Наша главная страница будет содержать состояние
 class HomePage extends StatefulWidget {
-  // StatefulWidget должен возвращать класс,
-  // которые наследуется от State
   @override
   _HomePageState createState() => _HomePageState();
 }
 
-// В треугольных скобках мы указываем наш StatefulWidget
-// для которого будет создано состояние
-// нижнее подчеркивание используется для того, чтобы
-// скрыть доступ к _HomePageState из других файлов
-// нижнее подчеркивание - аналогия private в Java / Kotlin
 class _HomePageState extends State<HomePage> {
 
-  // добавим переменную, которая будет нашим состоянием
-  // т.к. _counter мы будем использовать только внутри нашего
-  // класса, то сделаем его недоступным для других классов
-  // _counter будет хранить значение счетчика
-  var _counter = 0;
+  // GlobalKey будет хранить уникальный ключ,
+  // по которому мы сможем получить доступ
+  // к виджетам, которые уже находяться в иерархии
+  // NavigatorState - состояние Navigator виджета
+  final _navigatorKeys = {
+    TabItem.POSTS: GlobalKey<NavigatorState>(),
+    TabItem.ALBUMS: GlobalKey<NavigatorState>(),
+    TabItem.TODOS: GlobalKey<NavigatorState>(),
+  };
 
-  // build как мы уже отметили, строит
-  // иерархию наших любимых виджетов
+  // текущий выбранный элемент
+  var _currentTab = TabItem.POSTS;
+
+  // выбор элемента меню
+  void _selectTab(TabItem tabItem) {
+    setState(() => _currentTab = tabItem);
+  }
+
   @override
   Widget build(BuildContext context) {
-    // В большинстве случаев Scaffold используется
-    // как корневой виджет для страницы или экрана
-    // Scaffold позволяет вам указать AppBar, BottomNavigationBar,
-    // Drawer, FloatingActionButton и другие не менее важные
-    // компноненты (виджеты).
-    return Scaffold(
-      // мы создаем AppBar с текстом "Home page"
-      appBar: AppBar(title: Text("Home page")),
-      // указываем текст в качестве тела Scaffold
-      // текст предварительно вложен в Center виджет,
-      // чтобы выровнять его по центру
-      body: Center(
-        // добавляем AnimatedSwitcher, который и будет управлять
-        // нашей анимацией
-          child: AnimatedSwitcher(
-            // обратите внимание: const указывает
-            // на то, что нам известно значение Duration во время
-            // компиляции и мы не будем его менять во время выполнения
-            // класс Duration позволяет указать задержку в разных
-            // единицах измерения (секунды, миллисекунды и т.д.)
-            duration: const Duration(milliseconds: 900),
-            // AnimatedSwitcher создает reverse эффект,
-            // то  есть эффект возврата анимации к первоначальному
-            // состоянию, что выглядит не всегда красиво,
-            // поэтому я указал reverseDuration в 0
-            // вы можете поэкспериментировать с этим значением
-            reverseDuration: const Duration(milliseconds: 0),
-            child: Text(
-              // вывод значения счетчика
-              // при каждой перерисовки виджетов _counter
-              // увеличивается на единицу
-              "$_counter",
-              // здесь самое интересное
-              // когда мы изменяем значение _counter
-              // и вызываем функцию setState, компоненты
-              // перерисовываются и AnimatedSwitcher сравнивает
-              // предыдущий key своего дочернего виджета с текущим,
-              // если они не совпадают, то вопроизводит анимацию
-              key: ValueKey<int>(_counter),
-              // Также выравниваем текст внутри самого виджета Text
-              textAlign: TextAlign.center,
-              // Theme.of(context) позволяет получить доступ к
-              // текущему ThemeData, который мы указали в MaterialApp
-              // После получения ThemeData мы можем использовать
-              // различные его стили (например headline3, как здесь)
-              style: Theme.of(context).textTheme.displaySmall,
-            ),
-          )
-      ),
-      // добавляем кнопку
-      // FloatingActionButton - круглая кнопка в правом нижнем углу
-      floatingActionButton: FloatingActionButton(
-        // указываем иконку
-        // Flutter предлагает нам большой спектр встроенных иконок
-        child: const Icon(Icons.biotech),
-        onPressed: () {
-          // наконец то мы дошли до функции setState
-          // которая даст сигнал, что пора перерисовывать
-          // наши виджеты.
-          // здесь мы просто увеличиваем наш счетчик
-          setState(() {
-            _counter++;
-          });
-        },
+    // WillPopScope переопределяет поведения
+    // нажатия кнопки Back
+    return WillPopScope(
+      // логика обработки кнопки back может быть разной
+      // здесь реализована следующая логика:
+      // когда мы находимся на первом пункте меню (посты)
+      // и нажимаем кнопку Back, то сразу выходим из приложения
+      // в противном случае выбранный элемент меню переключается
+      // на предыдущий: c заданий на альбомы, с альбомов на посты,
+      // и после этого только выходим из приложения
+      onWillPop: () async {
+        if (_currentTab != TabItem.POSTS) {
+          if (_currentTab == TabItem.TODOS) {
+            _selectTab(TabItem.ALBUMS);
+          } else {
+            _selectTab(TabItem.POSTS);
+          }
+          return false;
+        } else {
+          return true;
+        }
+
+      },
+      child: Scaffold(
+        // Stack размещает один элемент над другим
+        // Проще говоря, каждый экран будет находится
+        // поверх другого, мы будем только переключаться между ними
+        body: Stack(children: <Widget>[
+          _buildOffstageNavigator(TabItem.POSTS),
+          _buildOffstageNavigator(TabItem.ALBUMS),
+          _buildOffstageNavigator(TabItem.TODOS),
+        ]),
+        // MyBottomNavigation мы создадим позже
+        bottomNavigationBar: MyBottomNavigation(
+          currentTab: _currentTab,
+          onSelectTab: _selectTab,
+        ),
+      ),);
+  }
+
+  // Создание одного из экранов - посты, альбомы или задания
+  Widget _buildOffstageNavigator(TabItem tabItem) {
+    return Offstage(
+      // Offstage работает следующим образом:
+      // если это не текущий выбранный элемент
+      // в нижнем меню, то мы его скрываем
+      offstage: _currentTab != tabItem,
+      // TabNavigator мы создадим позже
+      child: TabNavigator(
+        navigatorKey: _navigatorKeys[tabItem],
+        tabItem: tabItem,
       ),
     );
   }
-
 }
