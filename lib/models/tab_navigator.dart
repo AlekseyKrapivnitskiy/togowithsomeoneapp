@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:togowithsomeoneapp/pages/todo_list_page.dart';
+
+import '../pages/albums_list_page.dart';
+import '../pages/post_list_page.dart';
 import '../models/tab.dart';
-import '../pages/pony_list_page.dart';
 
 class TabNavigator extends StatelessWidget {
 
@@ -35,12 +38,11 @@ class TabNavigator extends StatelessWidget {
         // сначала определяем текущую страницу
         Widget currentPage;
         if (tabItem == TabItem.POSTS) {
-          // пока мы будем использовать PonyListPage
-          currentPage = PonyListPage();
-        } else if (tabItem == TabItem.POSTS) {
-          currentPage = PonyListPage();
+          currentPage = PostListPage();
+        } else if (tabItem == TabItem.ALBUMS) {
+          currentPage = AlbumListPage();
         } else {
-          currentPage = PonyListPage();
+          currentPage = TodoListPage();
         }
         // строим Route (страница или экран)
         return MaterialPageRoute(builder: (context) => currentPage,);
