@@ -23,7 +23,7 @@ class _HomePageState extends StateMVC {
   // передает ему наш контроллер
   _HomePageState() : super(HomeController()) {
     // получаем ссылку на наш контроллер
-    _con = HomeController.controller;
+    _con = HomeController.controller!;
   }
 
 
