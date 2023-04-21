@@ -3,13 +3,14 @@ import '../models/tab.dart';
 import '../pages/pony_list_page.dart';
 
 class TabNavigator extends StatelessWidget {
+
+  final GlobalKey<NavigatorState>? navigatorKey;
+  final TabItem tabItem;
+
   // TabNavigator принимает:
   // navigatorKey - уникальный ключ для NavigatorState
   // tabItem - текущий пункт меню
   TabNavigator({required this.navigatorKey, required this.tabItem});
-
-  final GlobalKey<NavigatorState> navigatorKey;
-  final TabItem tabItem;
 
   @override
   Widget build(BuildContext context) {
