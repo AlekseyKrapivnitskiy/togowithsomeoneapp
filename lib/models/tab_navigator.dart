@@ -38,6 +38,7 @@ class TabNavigator extends StatelessWidget {
         // сначала определяем текущую страницу
         Widget currentPage;
         if (tabItem == TabItem.POSTS) {
+          // указываем соответствующие страницы
           currentPage = PostListPage();
         } else if (tabItem == TabItem.ALBUMS) {
           currentPage = AlbumListPage();
