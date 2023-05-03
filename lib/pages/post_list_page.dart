@@ -3,6 +3,7 @@ import 'package:mvc_pattern/mvc_pattern.dart';
 
 import '../controllers/post_controller.dart';
 import '../models/post.dart';
+import 'post_add_page.dart';
 
 class PostListPage extends StatefulWidget {
   @override
@@ -32,10 +33,28 @@ class _PostListPageState extends StateMVC {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text("Post List Page"),
-        ),
-        body: _buildContent()
+      appBar: AppBar(
+        title: Text("Post List Page"),
+      ),
+      body: _buildContent(),
+      // в первой части мы уже рассматривали FloatingActionButton
+      floatingActionButton: FloatingActionButton(
+        child: Icon(Icons.add),
+        onPressed: () {
+          // then возвращает объект Future
+          // на который мы подписываемся и ждем результата
+          Navigator.push(context, MaterialPageRoute(
+              builder: (context) => PostDetailPage()
+          )).then((value) {
+            if (value is PostAddSuccess) {
+              // SnackBar - всплывающее сообщение
+              ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text("Пост был успешно добавлен"))
+              );
+            }
+          });
+        },
+      ),
     );
   }
 

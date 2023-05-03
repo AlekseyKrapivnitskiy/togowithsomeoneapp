@@ -23,4 +23,18 @@ class PostController extends ControllerMVC {
       setState(() => currentState = PostResultFailure("Нет интернета"));
     }
   }
+
+  // добавление поста
+  // функция addPost будет принимать callback,
+  // через который мы будет получать результат
+  void addPost(Post post, void Function(PostAdd) callback) async {
+    try {
+      final result = await repo.addPost(post);
+      // сервер вернул результат
+      callback(result);
+    } catch (error) {
+      // произошла ошибка
+      callback(PostAddFailure());
+    }
+  }
 }
