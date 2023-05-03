@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'pages/home_page.dart';
+import 'resources/theme.dart';
 
 // main() является главной функцией с которой начинается
 // выполнение приложения
@@ -27,9 +28,7 @@ class MyApp extends StatelessWidget {
       // убираем баннер
       debugShowCheckedModeBanner: false,
       // настройка темы, мы ещё вернёмся к этому
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
+      theme: usualTheme,
       // Наша главная страница с нижнем меню
       home: HomePage(),
     );

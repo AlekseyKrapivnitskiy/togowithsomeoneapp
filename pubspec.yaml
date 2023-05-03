@@ -73,6 +73,22 @@ flutter:
   # the material Icons class.
   uses-material-design: true
 
+  # указываем кастомные шрифты
+  fonts:
+    # название семейства шрифтов
+    - family: Kalam
+      fonts:
+        # для каждого файла шрифта мы прописываем
+        # соответствующие параметры
+        - asset: fonts/Kalam-Regular.ttf
+          style: normal
+        - asset: fonts/Kalam-Bold.ttf
+          weight: 700
+          style: normal
+        - asset: fonts/Kalam-Light.ttf
+          style: normal
+          weight: 300
+
   # To add assets to your application, add an assets section, like this:
   # assets:
   #   - images/a_dot_burr.jpeg
