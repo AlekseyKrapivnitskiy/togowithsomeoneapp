@@ -2,6 +2,7 @@ import 'dart:convert';
 
 // импортируем http пакет
 import 'package:http/http.dart' as http;
+import '../models/photo.dart';
 import '../models/post.dart';
 
 // мы ещё не раз будем использовать
@@ -43,6 +44,24 @@ class Repository {
     } else {
       // иначе ошибка
       return PostAddFailure();
+    }
+  }
+
+  Future<PhotoList> fetchPhotos() async {
+    // сначала создаем URL, по которому
+    // мы будем делать запрос
+    final url = Uri.parse("$SERVER/photos");
+    // делаем GET запрос
+    final response = await http.get(url);
+
+    // проверяем статус ответа
+    if (response.statusCode == 200) {
+      // если все ок то возвращаем все картинки
+      // json.decode парсит ответ
+      return PhotoList.fromJson(json.decode(response.body));
+    } else {
+      // в противном случае вызываем исключение
+      throw Exception("failed request");
     }
   }
 }

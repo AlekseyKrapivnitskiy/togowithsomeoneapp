@@ -1,4 +1,3 @@
-// сначала создаем объект самого поста
 import 'dart:convert';
 
 class Post {
